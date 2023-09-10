@@ -3,6 +3,7 @@
 import 'package:circle_nav_bar/circle_nav_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:first/main.dart';
+import 'package:first/services/screen.service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

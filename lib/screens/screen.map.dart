@@ -1,240 +1,51 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'dart:async';
 
-class MapScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
+
+  @override
+  State<MapScreen> createState() => MapScreenState();
+}
+
+class MapScreenState extends State<MapScreen> {
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
+
+  static const CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
+
+  static const CameraPosition _kLake = CameraPosition(
+      bearing: 192.8334901395799,
+      // target: LatLng(37.43296265331129, -122.08832357078792),
+      target: LatLng(16.05010373235355, 108.23518091844045),
+      tilt: 59.440717697143555,
+      zoom: 30);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(1, 1, 1, 1),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 20, left: 50),
-                        child: Text(
-                          'Create Location',
-                          style: GoogleFonts.nunito(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 23,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        transform: Matrix4.translationValues(10, 12, 0),
-                        // margin: EdgeInsets.only(top: 12),
-                        // alignment: Alignment.lef,
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.arrow_back),
-                          label: const Text(''),
-                          // style: ElevatedButton.styleFrom(
-                          //   backgroundColor: const Color.fromRGBO(1, 1, 1, 1),
-                          // ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Stack(
-                  //   children: [
-                  //     Container(
-                  //       margin: const EdgeInsets.only(top: 10, left: 30),
-                  //       child: Text(
-                  //         'Your Name (*)',
-                  //         style: GoogleFonts.nunito(
-                  //           fontWeight: FontWeight.w700,
-                  //           fontSize: 18,
-                  //           color: Colors.white,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     Container(
-                  //       height: 50,
-                  //       width: (rong - 60),
-                  //       margin: const EdgeInsets.only(top: 50, left: 30),
-                  //       // padding: EdgeInsets.only(left: 100, right: 100),
-                  //       decoration: BoxDecoration(
-                  //         borderRadius: BorderRadius.circular(12),
-                  //         color: const Color.fromRGBO(28, 28, 28, 1),
-                  //       ),
-                  //       child: Align(
-                  //         alignment: Alignment.centerLeft,
-                  //         child: Padding(
-                  //           padding: const EdgeInsets.only(left: 10),
-                  //           child: Text(
-                  //             'e.g: Nguyen Van A',
-                  //             style: GoogleFonts.nunito(
-                  //               fontWeight: FontWeight.w700,
-                  //               fontSize: 18,
-                  //               color: Colors.white30,
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  // Stack(
-                  //   children: [
-                  //     Container(
-                  //       margin: const EdgeInsets.only(top: 20, left: 30),
-                  //       child: Text(
-                  //         'Date (*)',
-                  //         style: GoogleFonts.nunito(
-                  //           fontWeight: FontWeight.w700,
-                  //           fontSize: 18,
-                  //           color: Colors.white,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     Container(
-                  //       height: 50,
-                  //       width: (rong - 60),
-                  //       margin: const EdgeInsets.only(top: 60, left: 30),
-                  //       decoration: BoxDecoration(
-                  //         borderRadius: BorderRadius.circular(12),
-                  //         color: const Color.fromRGBO(28, 28, 28, 1),
-                  //       ),
-                  //       child: Align(
-                  //         alignment: Alignment.centerLeft,
-                  //         child: Padding(
-                  //           padding: const EdgeInsets.only(left: 10),
-                  //           child: Text(
-                  //             'e.g: XX/XX/XXXX',
-                  //             style: GoogleFonts.nunito(
-                  //               fontWeight: FontWeight.w700,
-                  //               fontSize: 18,
-                  //               color: Colors.white30,
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     Container(
-                  //       margin: const EdgeInsets.only(top: 73, left: 320),
-                  //       child: const Icon(
-                  //         Icons.calendar_month_outlined,
-                  //         color: Colors.white60,
-                  //       ),
-                  //     )
-                  //   ],
-                  // ),
-                  // Stack(
-                  //   children: [
-                  //     Container(
-                  //       margin: const EdgeInsets.only(top: 20, left: 30),
-                  //       child: Text(
-                  //         'Location (*)',
-                  //         style: GoogleFonts.nunito(
-                  //           fontWeight: FontWeight.w700,
-                  //           fontSize: 18,
-                  //           color: Colors.white,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     Container(
-                  //       height: 50,
-                  //       width: (rong - 60),
-                  //       margin: const EdgeInsets.only(top: 60, left: 30),
-                  //       decoration: BoxDecoration(
-                  //         borderRadius: BorderRadius.circular(12),
-                  //         color: const Color.fromRGBO(28, 28, 28, 1),
-                  //       ),
-                  //       child: Align(
-                  //         alignment: Alignment.centerLeft,
-                  //         child: Padding(
-                  //           padding: const EdgeInsets.only(left: 10),
-                  //           child: Text(
-                  //             'e.g: Street, District, City',
-                  //             style: GoogleFonts.nunito(
-                  //               fontWeight: FontWeight.w700,
-                  //               fontSize: 18,
-                  //               color: Colors.white30,
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     Container(
-                  //       margin: const EdgeInsets.only(top: 73, left: 320),
-                  //       height: 20,
-                  //       width: 20,
-                  //       child: const Icon(
-                  //         Icons.location_on_outlined,
-                  //         color: Colors.white60,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  // Stack(
-                  //   children: [
-                  //     Container(
-                  //       margin: const EdgeInsets.only(top: 20, left: 30),
-                  //       child: Text(
-                  //         'Image location (*)',
-                  //         style: GoogleFonts.nunito(
-                  //           fontWeight: FontWeight.w700,
-                  //           fontSize: 18,
-                  //           color: Colors.white,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     Container(
-                  //       height: 200,
-                  //       width: (rong - 60),
-                  //       margin: const EdgeInsets.only(top: 60, left: 30),
-                  //       decoration: BoxDecoration(
-                  //         borderRadius: BorderRadius.circular(12),
-                  //         color: const Color.fromRGBO(28, 28, 28, 1),
-                  //       ),
-                  //     ),
-                  //     Container(
-                  //       height: 30,
-                  //       width: 100,
-                  //       margin: const EdgeInsets.only(top: 70, left: 50),
-                  //       decoration: BoxDecoration(
-                  //         borderRadius: BorderRadius.circular(5),
-                  //         color: Colors.black.withOpacity(0.485),
-                  //       ),
-                  //       child: Align(
-                  //         alignment: Alignment.center,
-                  //         child: Text(
-                  //           'Select Files',
-                  //           style: GoogleFonts.nunito(
-                  //             fontWeight: FontWeight.w700,
-                  //             fontSize: 14,
-                  //             color: Colors.white60,
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     Container(
-                  //       height: 2,
-                  //       width: (rong - 60 - 40),
-                  //       margin: const EdgeInsets.only(top: 110, left: 50),
-                  //       decoration: BoxDecoration(
-                  //         borderRadius: BorderRadius.circular(5),
-                  //         color: Colors.black.withOpacity(0.3),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                ],
-              ),
-            ],
-          ),
-        ),
+      body: GoogleMap(
+        mapType: MapType.hybrid,
+        initialCameraPosition: _kGooglePlex,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _goToTheLake,
+        label: const Text('To the Dong Nau cafe!'),
+        icon: const Icon(Icons.directions_boat),
       ),
     );
+  }
+
+  Future<void> _goToTheLake() async {
+    final GoogleMapController controller = await _controller.future;
+    await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }
