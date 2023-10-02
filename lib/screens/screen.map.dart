@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_routes/google_maps_routes.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -14,38 +16,61 @@ class MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+  late LatLng _initialPosition;
+  final Set<Marker> markers = {};
+  @override
+  void initState() {
+    super.initState();
+    _getUserLocation();
+  }
 
-  static const CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      // target: LatLng(37.43296265331129, -122.08832357078792),
-      target: LatLng(16.05010373235355, 108.23518091844045),
-      tilt: 59.440717697143555,
-      zoom: 30);
+  final LocationAccuracy accuracy = LocationAccuracy.high;
+  void _getUserLocation() async {
+    var position = await GeolocatorPlatform.instance.getCurrentPosition(
+        locationSettings: LocationSettings(accuracy: accuracy));
+    setState(() {
+      _initialPosition = LatLng(position.latitude, position.longitude);
+    });
+  }
+
+  List<LatLng> points = [
+    const LatLng(16.0501368, 108.2351368),
+    const LatLng(16.0862461, 108.2338082),
+  ];
+  DistanceCalculator distanceCalculator = new DistanceCalculator();
+
+  MapsRoutes route = MapsRoutes();
+  void _draw() async {
+    await route.drawRoute(
+        points, 'abc', Colors.black, "AIzaSyBoU1FxBm9sb1TEk7N0Z8WDiZ7fzo9YW9g");
+    print('abc ${route.routes}');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
+        mapType: MapType.normal,
+        initialCameraPosition:
+            CameraPosition(target: _initialPosition, zoom: 11.0),
+        markers: {
+          const Marker(
+              markerId: MarkerId('Dong Nau Cafe'),
+              position: LatLng(16.0501368, 108.2351368)),
+          const Marker(
+              markerId: MarkerId('Nha Tuan'),
+              position: LatLng(16.0862461, 108.2338082)),
+        },
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
+        polylines: route.routes,
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
+        onPressed: _draw,
         label: const Text('To the Dong Nau cafe!'),
         icon: const Icon(Icons.directions_boat),
       ),
     );
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }
